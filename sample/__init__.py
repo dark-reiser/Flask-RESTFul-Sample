@@ -1,4 +1,3 @@
-
 from flask import Flask
 from flask.ext.redis import FlaskRedis
 from flask.ext.bcrypt import Bcrypt
@@ -11,6 +10,7 @@ def create_app(config_name):
     """
     Entry point to the Flask RESTFul Server application.
     """
+
     app = Flask(__name__)
     app.config.from_object(config[config_name])
 
