@@ -3,3 +3,6 @@ class NotUniqueException(Exception):
 
 class ExistedException(Exception):
     pass
+
+class DoesNotExistsException(Exception):
+    pass

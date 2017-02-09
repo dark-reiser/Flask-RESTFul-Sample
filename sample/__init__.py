@@ -1,10 +1,14 @@
 from flask import Flask
 from flask.ext.redis import FlaskRedis
 from flask.ext.bcrypt import Bcrypt
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.restful import Api
 from config import config
 
 rdb = FlaskRedis()
 bcrypt = Bcrypt()
+db = SQLAlchemy()
+api = Api()
 
 def create_app(config_name):
     """
@@ -16,11 +20,15 @@ def create_app(config_name):
 
     rdb.init_app(app)
     bcrypt.init_app(app)
+    db.init_app(app)
+    api.init_app(app)
 
     from sample.auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
     from sample.api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
+
+    db.create_all()
 
     return app

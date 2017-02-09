@@ -1,14 +1,11 @@
-
-"""
-Create an application instance.
-"""
-
 import os
 
 class BaseConfig(object):
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = 'SECRET_KEY'
 
     ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
+
+    REDIS_URL = 'redis://localhost:6379/0'
 
     SQLALCHEMY_DATABASE_URL = None
 
