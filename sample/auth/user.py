@@ -7,9 +7,12 @@ class User(db.Model):
     """
 
     __tablename__ = 'users'
-    id = db.Column(db.Interger)
-    username = db.Column(db.String(64), nullable=False, primary_key=True)
-    passwd_hash = db.Column(db.String(128))
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), nullable=False)
+    passwd_hash = db.Column(db.String(128), nullable=False)
+
+    def __repr__(self):
+        return '<User %r>' % self.username
 
     @property
     def passwd(self):
@@ -28,5 +31,5 @@ class Client(db.Model):
     """
 
     __talblename__ = 'clients'
-    id = db.Column(db.Interger, primary_key=True)
-    secret = db.Column(db.String(128))
+    id = db.Column(db.Integer, primary_key=True)
+    secret = db.Column(db.String(128), nullable=False)

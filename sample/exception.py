@@ -6,3 +6,21 @@ class ExistedException(Exception):
 
 class DoesNotExistsException(Exception):
     pass
+
+class NotAuth(Exception):
+    pass
+
+class ParamsError(Exception):
+    pass
+
+class GrandTypeError(Exception):
+    pass
+
+class LoginFailed(Exception):
+    pass
+
+class NotPermission(Exception):
+    pass
+
+class HttpException(Exception):
+    pass

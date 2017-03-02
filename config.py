@@ -16,8 +16,11 @@ class DevelopmentConfig(BaseConfig):
 
     DEBUG = True
 
-    SQLALCHEMY_DATABASE_URL = None
+    SQLALCHEMY_DATABASE_URL = 'mysql://root:fortinet@127.0.0.1/test'
 
+    REDIS_URL = 'redis://localhost:6379/0'
+
+    ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 config = {
     'development': DevelopmentConfig,
