@@ -19,7 +19,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
     REDIS_URL = 'redis://localhost:6379/0'
-    # SQLALCHEMY_DATABASE_URL = 'mysql+pymysql://root:fortinet@127.0.0.1/test'
+    # SQLALCHEMY_DATABASE_URL = 'mysql+pymysql://username:password@host/database'
 
 
 config = {
