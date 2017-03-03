@@ -7,7 +7,7 @@ class ExistedException(Exception):
 class DoesNotExistsException(Exception):
     pass
 
-class NotAuth(Exception):
+class NeedAuth(Exception):
     pass
 
 class ParamsError(Exception):

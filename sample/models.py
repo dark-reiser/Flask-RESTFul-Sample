@@ -1,5 +1,5 @@
-from sample import bcrypt
-from sample import db
+from . import bcrypt
+from . import db
 
 class User(db.Model):
     """

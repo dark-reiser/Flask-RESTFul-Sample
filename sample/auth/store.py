@@ -1,7 +1,7 @@
 import uuid
 from werkzeug import cached_property
 from sample import exception
-from sample import rdb
+from .. import rdb
 from itsdangerous import JSONWebSignatureSerializer
 
 
@@ -22,9 +22,10 @@ class TokenStore(object):
 
     def save(self):
         context = {'token_type':self.token_type, 'uid':self.uid, 'client_id':self.client_id}
-        rdb.hmset('{}'.format(self._token), context)
+        rdb.hmset('{}'.format(self.token), context)
         rdb.expire(self.token, self.expires)
         return None
+
 
 def generate_token():
     token = JSONWebSignatureSerializer('SECRET-KEY').dumps(uuid.uuid1().hex)

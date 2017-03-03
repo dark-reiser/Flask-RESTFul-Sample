@@ -1,15 +1,16 @@
 import functools
 from flask import request
-from sample import rdb
-from sample import db
-from user import User, Client
+from .. import rdb
+from .. import db
+from sample.models import User, Client
 from sample import exception
+
 
 def need_auth(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        
-        if 'authorization' not in request.header:
+
+        if "authorization" not in request.headers:
             raise exception.NeedAuth
 
         return func(*args, **kwargs)
@@ -20,8 +21,8 @@ def auth_source(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
 
-        access_token = request.header['authorization']
-        if rdb.hmgetall(access_token):
+        access_token = request.headers['authorization']
+        if rdb.hgetall(access_token):
             pass
         else:
             raise exception.NotPermission
@@ -45,11 +46,11 @@ def verify(data):
     if client.secret != data['client_secret']:
         return False
 
-    return user.id
+    return user
 
 
 def verify_refresh_token(token):
-    if rdb.hmget(token, 'token_type') == 'Refresh':
+    if rdb.hget(token, 'token_type') == 'Refresh':
         return rdb.hmget(token, 'uid', 'client_id')
 
     else:
@@ -57,7 +58,7 @@ def verify_refresh_token(token):
 
 
 def verify_access_token(token):
-    if rdb.hmget(token, 'token_type') == 'Access':
+    if rdb.hget(token, 'token_type') == 'Access':
         return rdb.hmget(token, 'uid', 'client_id')
 
     else:

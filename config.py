@@ -1,26 +1,26 @@
 import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 
-class BaseConfig(object):
-    SECRET_KEY = 'SECRET_KEY'
 
-    ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
+class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'RND_SECRET_KEY_VALUE'
+    SSL_DISABLE = False
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_RECORD_QUERIES = True
 
-    REDIS_URL = 'redis://localhost:6379/0'
+    @staticmethod
+    def init_app(app):
+        pass
 
-    SQLALCHEMY_DATABASE_URL = None
 
-    DEBUG = False
-
-class DevelopmentConfig(BaseConfig):
-    SECRET_KEY = 'RND_SECRET_KEY_VALUE'
-
+class DevelopmentConfig(Config):
     DEBUG = True
-
-    SQLALCHEMY_DATABASE_URL = 'mysql://root:fortinet@127.0.0.1/test'
-
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+       'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
     REDIS_URL = 'redis://localhost:6379/0'
+    # SQLALCHEMY_DATABASE_URL = 'mysql+pymysql://root:fortinet@127.0.0.1/test'
 
-    ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 config = {
     'development': DevelopmentConfig,

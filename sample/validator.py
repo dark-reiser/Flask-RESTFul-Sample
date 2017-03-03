@@ -36,6 +36,6 @@ def validate(key, params):
     v.validate(params, _v[key])
 
     if v.errors:
-        raise exceptions.ParamsError
+        raise exception.ParamsError
 
     return True

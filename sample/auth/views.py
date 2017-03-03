@@ -1,16 +1,24 @@
 from flask import request, jsonify
-from app.app import restless
-from app.app import db
-from app.app import rdb
-from . import auth
+from .. import db
+from .. import restless
+from .. import rdb
+from . import auth_bp
 from store import TokenStore, generate_token
-from user import User, Client
+from sample.models import User, Client
 from sample.validator import validate
 from utils import verify, verify_refresh_token, verify_access_token
 from utils import need_auth, auth_source
 from sample import exception
 
-auth.route('/oauth', method=['POST'])
+@auth_bp.route('/test', methods=['GET'])
+@need_auth
+@auth_source
+def test():
+    return jsonify({
+        "test": "OK"
+        })
+
+@auth_bp.route('/oauth', methods=['POST'])
 def access():
     validate('type_validate', request.json)
 
@@ -18,10 +26,13 @@ def access():
         validate('password_login', request.json)
         user = verify(request.json)
         if not user:
-            raise exceptions.LoginFailed
+            raise exception.LoginFailed
 
         access_token = TokenStore(user.id, request.json['client_id'], generate_token())
-        refresh_token = TokenStore(user.id, request.json['client_id'], generate_token(), token_type='Refresh',)        
+        refresh_token = TokenStore(user.id, request.json['client_id'], generate_token(), token_type='Refresh',)
+
+        access_token.save()
+        refresh_token.save()
 
         return jsonify({
             "access_token": access_token.token,
@@ -32,16 +43,18 @@ def access():
         validate('refresh_login', request.json)
         refresh_token = verify_refresh_token(request.json['refresh_token'])
         if not refresh_token:
-            raise exceptions.LoginFailed
+            raise exception.LoginFailed
 
-        access_token = TokenStore(refresh_token['uid'], refresh_token['client_id'], generate_token())
+        access_token = TokenStore(refresh_token[0], refresh_token[1], generate_token())
+
+        access_token.save()
 
         return jsonify({
             "access_token": access_token.token
             })
 
     else:
-        raise exceptions.GrandTypeError
+        raise exception.GrandTypeError
 
     return jsonify({
         "code": 0,
@@ -61,7 +74,6 @@ def _user_get_many(*args, **kwargs):
 
     if 'filters' not in search_params:
 
-        user = session['user']
         search_params['filters'] = []
         filt = None
 
