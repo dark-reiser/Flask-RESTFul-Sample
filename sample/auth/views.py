@@ -6,17 +6,10 @@ from . import auth_bp
 from store import TokenStore, generate_token
 from sample.models import User, Client
 from sample.validator import validate
-from utils import verify, verify_refresh_token, verify_access_token
-from utils import need_auth, auth_source
+from utils import verify, verify_refresh_token
+from sample.utils import need_auth, auth_source, verify_access_token
 from sample import exception
 
-@auth_bp.route('/test', methods=['GET'])
-@need_auth
-@auth_source
-def test():
-    return jsonify({
-        "test": "OK"
-        })
 
 @auth_bp.route('/oauth', methods=['POST'])
 def access():
@@ -53,39 +46,3 @@ def access():
             "access_token": access_token.token
             })
 
-    else:
-        raise exception.GrandTypeError
-
-    return jsonify({
-        "code": 0,
-        "data": user
-    })
-
-
-
-
-@need_auth
-@auth_source
-def _user_get_many(*args, **kwargs):
-    search_params = kwargs['search_params']
-
-    if search_params is None:
-        return
-
-    if 'filters' not in search_params:
-
-        search_params['filters'] = []
-        filt = None
-
-        if filt:
-            search_params['filters'].append(filt)
-
-
-_url_prefix = '/auth'
-restless.create_api(User
-                    , collection_name="user"
-                    , methods=['GET', 'POST', 'PUT', 'DELETE']
-                    , exclude_columns=['password']
-                    , url_prefix=_url_prefix
-                    , preprocessors={"GET_MANY":[_user_get_many]}
-                )

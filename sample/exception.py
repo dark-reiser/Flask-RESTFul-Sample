@@ -1,3 +1,6 @@
+from flask import jsonify
+
+
 class NotUniqueException(Exception):
     pass
 
@@ -8,19 +11,34 @@ class DoesNotExistsException(Exception):
     pass
 
 class NeedAuth(Exception):
-    pass
+    return jsonify(
+        "code": 403,
+        "message": "Not Authenticated"
+        )
 
 class ParamsError(Exception):
-    pass
+    return jsonify(
+        "code": 400,
+        "message": "Params Error"
+        )
 
 class GrandTypeError(Exception):
-    pass
+    return jsonify(
+        "code": 400,
+        "message": "Grand Type Error"
+        )
 
 class LoginFailed(Exception):
-    pass
+    return jsonify(
+        "code": 403,
+        "message": "Login Failed"
+        )
 
 class NotPermission(Exception):
-    pass
+    return jsonify(
+        "code": 403,
+        "message": "Not Permission"
+        )
 
 class HttpException(Exception):
     pass

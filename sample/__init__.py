@@ -22,53 +22,53 @@ def create_app(config_name):
     bcrypt.init_app(app)
     restless.init_app(app)
 
-    from sample.auth import auth_bp as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prefix='/auth')
-
     from sample.api import api_bp as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
+
+    from sample.auth import auth_bp as auth_blueprint
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
     @app.before_first_request
     def create_database():
         db.create_all()
 
-    # @app.errorhandler(400)
-    # def not_found(error):
-    #     return jsonify({
-    #         "code": 400,
-    #         "message": "BadRequest"
-    #     })
+    @app.errorhandler(400)
+    def not_found(error):
+        return jsonify({
+            "code": 400,
+            "message": "Bad Request"
+        })
 
 
-    # @app.errorhandler(404)
-    # def not_found(error):
-    #     return jsonify({
-    #         "code": 404,
-    #         "message": "NotFound"
-    #     })
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            "code": 404,
+            "message": "Not Found"
+        })
 
 
-    # @app.errorhandler(405)
-    # def method_not_support(error):
-    #     return jsonify({
-    #         "code": 405,
-    #         "message": "MethodNotSupport"
-    #     })
+    @app.errorhandler(405)
+    def method_not_support(error):
+        return jsonify({
+            "code": 405,
+            "message": "Method Not Support"
+        })
 
 
-    # @app.errorhandler(exception.HttpException)
-    # def http_exception(error):
-    #     return jsonify({
-    #         "code": error.code,
-    #         "message": error.message
-    #     })
+    @app.errorhandler(exception.HttpException)
+    def http_exception(error):
+        return jsonify({
+            "code": error.code,
+            "message": error.message
+        })
 
 
-    # @app.errorhandler(Exception)
-    # def internel_error(error):
-    #     return jsonify({
-    #         "code": 500,
-    #         "message": "Internal Error"
-    #     })
+    @app.errorhandler(Exception)
+    def internel_error(error):
+        return jsonify({
+            "code": 500,
+            "message": "Internal Error"
+        })
 
     return app
