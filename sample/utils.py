@@ -11,7 +11,7 @@ def need_auth(func):
     def wrapper(*args, **kwargs):
 
         if "authorization" not in request.headers:
-            raise exception.NeedAuth
+            raise exception.NeedAuth()
 
         return func(*args, **kwargs)
     return wrapper
@@ -25,7 +25,7 @@ def auth_source(func):
         if rdb.hgetall(access_token):
             pass
         else:
-            raise exception.NotPermission
+            raise exception.NotPermission()
 
         return func(*args, **kwargs)
     return wrapper

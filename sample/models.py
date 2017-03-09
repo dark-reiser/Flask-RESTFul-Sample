@@ -1,6 +1,20 @@
 from . import bcrypt
 from . import db
 
+
+class BaseMixin:
+    def to_dict(self, exclude_columns=None):
+        if exclude_columns is None:
+            exclude_columns = []
+        d = {}
+        for column in self.__table__.columns:
+            if unicode(column.name) in exclude_columns:
+                continue
+            d[column.name] = getattr(self, column.name)
+
+        return d
+
+
 class User(db.Model):
     """
     User.
@@ -25,6 +39,7 @@ class User(db.Model):
     def verify_passwd(self, passwd):
         return bcrypt.check_password_hash(self.passwd_hash, passwd)
 
+
 class Client(db.Model):
     """
     Client.
@@ -33,3 +48,15 @@ class Client(db.Model):
     __talblename__ = 'clients'
     id = db.Column(db.Integer, primary_key=True)
     secret = db.Column(db.String(128), nullable=False)
+
+
+class Student(db.Model, BaseMixin):
+    """
+    Student
+    """
+
+    __tablename__ = 'students'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    address = db.Column(db.String(128), nullable=False)
+    profession = db.Column(db.String(128), nullable=False)

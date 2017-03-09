@@ -4,12 +4,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_redis import FlaskRedis
 from flask_bcrypt import Bcrypt
 from flask_restless import APIManager
+from flask_restful import Api
 from config import config
 
 db = SQLAlchemy()
 rdb = FlaskRedis()
 bcrypt = Bcrypt()
 restless = APIManager()
+api = Api()
 
 
 def create_app(config_name):
@@ -21,11 +23,12 @@ def create_app(config_name):
     rdb.init_app(app)
     bcrypt.init_app(app)
     restless.init_app(app)
+    api.init_app(app)
 
-    from sample.api import api_bp as api_blueprint
+    from sample.api.views import api_bp as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
 
-    from sample.auth import auth_bp as auth_blueprint
+    from sample.auth.views import auth_bp as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
     @app.before_first_request

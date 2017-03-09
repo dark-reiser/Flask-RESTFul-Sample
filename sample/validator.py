@@ -9,6 +9,7 @@ _v = {
             'required': True
         },
     },
+
     'password_login': {
         'username': {
             'required': True
@@ -23,11 +24,25 @@ _v = {
             'required': True
         },
     },
+
     'refresh_login': {
         'refresh_token': {
             'required': True
         },
     },
+
+    'student_create': {
+        'name': {
+            'required': True
+        },
+        'address': {
+            'required': True
+        },
+        'profession': {
+            'required': True
+        }
+    },
+
 }
 
 def validate(key, params):
@@ -36,6 +51,6 @@ def validate(key, params):
     v.validate(params, _v[key])
 
     if v.errors:
-        raise exception.ParamsError
+        raise exception.ParamsError()
 
     return True
